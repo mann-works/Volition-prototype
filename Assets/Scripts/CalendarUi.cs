@@ -39,9 +39,9 @@ public class CalenderUi : MonoBehaviour
     {
 
        
-        dayNameText.text = date.ToString("dddd").ToUpper();
+        dayNameText.text = date.ToString("dddd");
 
-        dateText.text = date.ToString("dd/MM");
+        dateText.text = date.ToString("MM/dd");
 
         periodText.text = period.ToString().ToUpper();
     }

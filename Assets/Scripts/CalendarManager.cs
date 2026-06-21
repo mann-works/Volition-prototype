@@ -28,7 +28,7 @@ public class CalendarManager : MonoBehaviour
 
         Instance = this;
 
-        CurrentDate = new DateTime(2020, 10, 11);
+        CurrentDate = new DateTime(2020, 06, 11);
         CurrentPeriod = TimePeriod.Morning;
     }
 
