@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InteractableStatChange : MonoBehaviour, IInteractable
 {
-    public enum StatType { Intelligence, Strength, Agility }
+    public enum StatType { Intelligence, Strength, Agility, Focus }
 
     [SerializeField] private StatType _statType;
     [SerializeField] private int _Amount = 3;
@@ -13,6 +13,17 @@ public class InteractableStatChange : MonoBehaviour, IInteractable
         if (_playerStats == null)
         {
             _playerStats = FindAnyObjectByType<PlayerStats>();
+        }
+
+         if (_statType == StatType.Focus)
+        {
+            if (TimeManager.Instance.CurrentTime != TimeManager.TimeOfDay.Night)
+            {
+                return;
+            }
+
+            TimeManager.Instance.Sleep();
+            return;
         }
 
         if (TimeManager.Instance.CurrentTime == TimeManager.TimeOfDay.Night)
