@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Animator _animator;
 
+
     private Vector2 _lastDirection = Vector2.down;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
