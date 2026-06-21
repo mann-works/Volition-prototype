@@ -15,6 +15,11 @@ public class InteractableStatChange : MonoBehaviour, IInteractable
             _playerStats = FindAnyObjectByType<PlayerStats>();
         }
 
+        if (TimeManager.Instance.CurrentTime == TimeManager.TimeOfDay.Night)
+        {
+            return;
+        }
+
         switch (_statType)
         {
             case StatType.Intelligence:
@@ -27,6 +32,7 @@ public class InteractableStatChange : MonoBehaviour, IInteractable
                 _playerStats.AddAgility(_Amount);
                 break;
         }
+        TimeManager.Instance.AdvanceTime();
     }
 
     public void onTouchingPlayer() { }
