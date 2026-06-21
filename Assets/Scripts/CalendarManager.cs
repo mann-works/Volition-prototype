@@ -1,14 +1,11 @@
+using System;
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class CalendarManager : MonoBehaviour
 {
-    public int year = 2025;
-    public int month = 4;
-    public int day = 11;
+    public static CalendarManager Instance { get; private set; }
 
-    public DayPeriod currentPeriod = DayPeriod.Morning;
-
-    public enum DayPeriod
+    public enum TimePeriod
     {
         Morning,
         Afternoon,
@@ -16,51 +13,58 @@ public class NewMonoBehaviourScript : MonoBehaviour
         Night
     }
 
+    public DateTime CurrentDate { get; private set; }
+    public TimePeriod CurrentPeriod { get; private set; }
+
+    public event Action<DateTime, TimePeriod> OnCalendarChanged;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
+        CurrentDate = new DateTime(2020, 10, 11);
+        CurrentPeriod = TimePeriod.Morning;
+    }
+
+    private void Start()
+    {
+        NotifyCalendarChanged();
+    }
+
     public void AdvanceTime()
     {
-        switch (currentPeriod)
+        switch (CurrentPeriod)
         {
-            case DayPeriod.Morning:
-                currentPeriod = DayPeriod.Afternoon;
+            case TimePeriod.Morning:
+                CurrentPeriod = TimePeriod.Afternoon;
                 break;
 
-            case DayPeriod.Afternoon:
-                currentPeriod = DayPeriod.Evening;
+            case TimePeriod.Afternoon:
+                CurrentPeriod = TimePeriod.Evening;
                 break;
 
-            case DayPeriod.Evening:
-                currentPeriod = DayPeriod.Night;
+            case TimePeriod.Evening:
+                CurrentPeriod = TimePeriod.Night;
                 break;
 
-            case DayPeriod.Night:
-                currentPeriod = DayPeriod.Morning;
-                AdvanceDay();
+            case TimePeriod.Night:
+                CurrentPeriod = TimePeriod.Morning;
+                CurrentDate = CurrentDate.AddDays(1);
                 break;
         }
+
+        NotifyCalendarChanged();
     }
 
-
-    private void AdvanceDay()
+    private void NotifyCalendarChanged()
     {
-        day++;
-
-        int daysInMonth = System.DateTime.DaysInMonth(year, month);
-
-        if (day > daysInMonth)
-        {
-            day = 1;
-            month++;
-
-            if (month > 12)
-            {
-                month = 1;
-                year++;
-            }
-        }
+        OnCalendarChanged?.Invoke(CurrentDate, CurrentPeriod);
     }
-    public void Study()
-    {
 
-        AdvanceTime();
-    }
 }
