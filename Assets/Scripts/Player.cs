@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 =======
 
 
+
     private Vector2 _lastDirection = Vector2.down;
 
     void Start()
