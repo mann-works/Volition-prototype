@@ -1,19 +1,15 @@
-using Unity.ProjectAuditor.Editor.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-
     [Header("Movement")]
     [SerializeField] private float _speed;
     private Vector2 _targetPosition;
     private Rigidbody2D _rigidbody;
     private Animator _animator;
-
     private Vector2 _lastDirection = Vector2.down;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -21,21 +17,14 @@ public class Player : MonoBehaviour
         _targetPosition = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void MoveTo(Vector2 worldPosition)
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
-
-            _targetPosition = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
-        }
+        _targetPosition = worldPosition;
     }
-     private void FixedUpdate()
+
+    private void FixedUpdate()
     {
         Vector2 currentPosition = _rigidbody.position;
-
         Vector2 direction = (_targetPosition - currentPosition).normalized;
 
         Vector2 newPosition = Vector2.MoveTowards(
@@ -54,9 +43,14 @@ public class Player : MonoBehaviour
             _animator.SetFloat("InputX", direction.x);
             _animator.SetFloat("InputY", direction.y);
             _lastDirection = direction;
-
         }
+
         _animator.SetFloat("LastInputX", _lastDirection.x);
         _animator.SetFloat("LastInputY", _lastDirection.y);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        _targetPosition = _rigidbody.position;
     }
 }
