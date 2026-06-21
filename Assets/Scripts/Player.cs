@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
     private Vector2 _targetPosition;
     private Rigidbody2D _rigidbody;
     private Animator _animator;
+<<<<<<< HEAD
+=======
+
+
     private Vector2 _lastDirection = Vector2.down;
 
     void Start()
