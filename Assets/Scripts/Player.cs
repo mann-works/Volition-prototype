@@ -1,3 +1,4 @@
+using Unity.ProjectAuditor.Editor.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,10 +9,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float _speed;
     private Vector2 _targetPosition;
     private Rigidbody2D _rigidbody;
+    private Animator _animator;
+
+    private Vector2 _lastDirection = Vector2.down;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
         _targetPosition = transform.position;
     }
 
@@ -26,9 +32,11 @@ public class Player : MonoBehaviour
             _targetPosition = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
         }
     }
-    private void FixedUpdate()
+     private void FixedUpdate()
     {
         Vector2 currentPosition = _rigidbody.position;
+
+        Vector2 direction = (_targetPosition - currentPosition).normalized;
 
         Vector2 newPosition = Vector2.MoveTowards(
             currentPosition,
@@ -37,5 +45,18 @@ public class Player : MonoBehaviour
         );
 
         _rigidbody.MovePosition(newPosition);
+
+        bool isWalking = Vector2.Distance(currentPosition, _targetPosition) > 0.01f;
+        _animator.SetBool("isWalking", isWalking);
+
+        if (isWalking)
+        {
+            _animator.SetFloat("InputX", direction.x);
+            _animator.SetFloat("InputY", direction.y);
+            _lastDirection = direction;
+
+        }
+        _animator.SetFloat("LastInputX", _lastDirection.x);
+        _animator.SetFloat("LastInputY", _lastDirection.y);
     }
 }
