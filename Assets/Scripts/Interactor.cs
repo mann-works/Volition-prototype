@@ -23,6 +23,12 @@ public class Interactor : MonoBehaviour
     {
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
+            if (DialogueManager.Instance != null && DialogueManager.Instance.isDialogueActive)
+            {
+                DialogueManager.Instance.DisplayNextDialogueLine();
+                return;
+            }
+
             Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(
                 Mouse.current.position.ReadValue()
             );

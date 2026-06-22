@@ -6,6 +6,7 @@ public class PlayerStats : MonoBehaviour
     public int intelligence;
     public int strength;
     public int agility;
+    public int focus;
 
     public void AddIntelligence(int amount)
     {
@@ -23,5 +24,11 @@ public class PlayerStats : MonoBehaviour
     {
         agility += amount;
         Debug.Log($"AGI +{amount} | Total: {agility}");
+    }
+
+    public void AddFocus(int amount)
+    {
+        focus += amount;
+        Debug.Log($"FOC +{amount} | Total: {focus}");
     }
 }
