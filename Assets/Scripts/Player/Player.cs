@@ -1,6 +1,7 @@
 using Unity.ProjectAuditor.Editor.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static BaseInteraction;
 
 public class Player : MonoBehaviour
 {
@@ -22,7 +23,6 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         _targetPosition = transform.position;
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -86,8 +86,39 @@ public class Player : MonoBehaviour
         {
             _waitingForInteraction = false;
 
+            if (_currentInteractable is BaseInteraction interaction)
+            {
+                SetFacing(interaction.FacingDirection);
+            }
+
             _currentInteractable?.Interact();
             _currentInteractable = null;
+
         }
+    }
+
+    public void SetFacing(FacingDirectionType direction)
+    {
+        switch (direction)
+        {
+            case FacingDirectionType.Up:
+                _lastDirection = Vector2.up;
+                break;
+
+            case FacingDirectionType.Down:
+                _lastDirection = Vector2.down;
+                break;
+
+            case FacingDirectionType.Left:
+                _lastDirection = Vector2.left;
+                break;
+
+            case FacingDirectionType.Right:
+                _lastDirection = Vector2.right;
+                break;
+        }
+
+        _animator.SetFloat("LastInputX", _lastDirection.x);
+        _animator.SetFloat("LastInputY", _lastDirection.y);
     }
 }

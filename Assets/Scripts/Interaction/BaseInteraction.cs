@@ -12,6 +12,17 @@ public abstract class BaseInteraction : MonoBehaviour, IInteractable
     [SerializeField] private StatModifier[] statModifiers;
 
     public Transform InteractionPoint => interactionPoint;
+ 
+
+    [SerializeField] private FacingDirectionType facingDirection;
+    public FacingDirectionType FacingDirection => facingDirection;
+    public enum FacingDirectionType
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
 
     protected virtual void Awake()
     {
