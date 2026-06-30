@@ -43,6 +43,6 @@ public class CalenderUi : MonoBehaviour
 
         dateText.text = date.ToString("MM/dd");
 
-        periodText.text = period.ToString().ToUpper();
+        periodText.text = period.ToString();
     }
 }
