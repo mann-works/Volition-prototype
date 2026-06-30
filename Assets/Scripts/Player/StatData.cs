@@ -6,6 +6,7 @@ public class StatData
     [SerializeField] private int xp;
 
     public int XP => xp;
+    public int MaxXP = 100;
 
     public int Level
     {
@@ -22,7 +23,8 @@ public class StatData
 
     public void AddXP(int amount)
     {
-        xp += amount;
+        xp = Mathf.Clamp(xp + amount, 0, MaxXP);
+      
     }
 }
 

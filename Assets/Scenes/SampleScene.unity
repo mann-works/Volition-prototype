@@ -13884,7 +13884,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SleepInteraction
   interactionPoint: {fileID: 0}
   confirmationMessage: Go To Sleep ?
-  statModifiers: []
+  statModifiers:
+  - statType: 1
+    amount: -5
   facingDirection: 1
 --- !u!61 &936514631
 BoxCollider2D:
