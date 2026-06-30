@@ -1,11 +1,12 @@
 using UnityEngine;
+using static StatType;
 
 public class SleepInteraction : MonoBehaviour
 {
     
     private void OnMouseDown()
     {
-        Sleep();
+        TestKnowledge();
     }
 
     public void Sleep()
@@ -21,6 +22,12 @@ public class SleepInteraction : MonoBehaviour
         {
             Debug.LogError("CalendarManager tidak ditemukan!");
         }
+    }
+    public void TestKnowledge()
+    {
+        PlayerStats.Instance.AddXP(StatType.Knowledge, 5);
+        CalendarManager.Instance.AdvanceTime();
+
     }
 }
 
