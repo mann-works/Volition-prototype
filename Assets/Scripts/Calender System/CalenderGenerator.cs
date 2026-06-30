@@ -53,7 +53,16 @@ public class CalenderGenerator : MonoBehaviour
             TMP_Text text = cell.GetComponentInChildren<TMP_Text>();
             text.text = i.ToString();
 
-            // Highlight today's date (optional)
+            DateTime cellDate = new DateTime(year, month, i);
+
+            // Exam Day
+            if (ExamManager.Instance != null &&
+                cellDate.Date == ExamManager.Instance.ExamDate.Date)
+            {
+                text.color = Color.red;
+            }
+
+            // Today
             if (i == currentDay)
             {
                 text.color = Color.yellow;
