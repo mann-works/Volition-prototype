@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
     private Vector2 _targetPosition;
     private Rigidbody2D _rigidbody;
     private Animator _animator;
-
+    private IInteractable _currentInteractable;
+    private bool _waitingForInteraction;
 
     private Vector2 _lastDirection = Vector2.down;
 
@@ -30,7 +31,27 @@ public class Player : MonoBehaviour
             Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
 
-            _targetPosition = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
+            RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
+            if (ConfirmationUI.Instance != null &&
+            ConfirmationUI.Instance.IsOpen)
+            {
+                return;
+            }
+            if (hit.collider != null)
+            {
+                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+
+                if (interactable != null)
+                {
+                    _targetPosition = interactable.InteractionPoint.position;
+                    _currentInteractable = interactable;
+                    _waitingForInteraction = true;
+                    return;
+                }
+            }
+
+            _targetPosition = mouseWorldPos;
+            _waitingForInteraction = false;
         }
     }
      private void FixedUpdate()
@@ -59,5 +80,14 @@ public class Player : MonoBehaviour
         }
         _animator.SetFloat("LastInputX", _lastDirection.x);
         _animator.SetFloat("LastInputY", _lastDirection.y);
+
+        if (_waitingForInteraction &&
+        Vector2.Distance(currentPosition, _targetPosition) < 0.05f)
+        {
+            _waitingForInteraction = false;
+
+            _currentInteractable?.Interact();
+            _currentInteractable = null;
+        }
     }
 }

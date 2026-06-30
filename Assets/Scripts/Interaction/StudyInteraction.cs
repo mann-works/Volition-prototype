@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class SleepInteraction : BaseInteraction
+public class StudyInteraction : BaseInteraction
 {
     protected override void ConfirmInteraction()
     {
         ApplyStatModifiers();
-        CalendarManager.Instance.AdvanceTime();
+
+        StudyManager.Instance.StartStudy();
     }
 }
