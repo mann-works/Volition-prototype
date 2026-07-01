@@ -37,12 +37,8 @@ public class CalenderUi : MonoBehaviour
 
     private void UpdateCalendar(DateTime date, CalendarManager.TimePeriod period)
     {
-
-       
         dayNameText.text = date.ToString("dddd");
-
         dateText.text = date.ToString("MM/dd");
-
         periodText.text = period.ToString();
     }
 }
