@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExamManager : MonoBehaviour
 {
@@ -11,11 +12,27 @@ public class ExamManager : MonoBehaviour
 
     private DateTime examDate;
     public DateTime ExamDate => examDate;
+    public int DaysUntilExam => daysUntilExam;
+    public int RequiredKnowledge => requiredKnowledge;
 
     private void Start()
     {
         examDate = CalendarManager.Instance.CurrentDate.AddDays(daysUntilExam);
-        CalendarManager.Instance.OnCalendarChanged += CheckExamDate;
+
+        GameManager.Instance.SetState(GameState.Lecture);
+
+        string welcomeMessage = $"Welcome to the semester! Your final exam is scheduled in {daysUntilExam} days. You must build up at least {requiredKnowledge} Knowledge to pass it. Be careful: if your Stress level reaches {PlayerStats.Instance.MaxStressLimit} or higher, you will collapse and fail immediately!";
+
+        DialogUI.Instance.Show(
+            "System",
+            welcomeMessage,
+            () =>
+            {
+                GameManager.Instance.SetState(GameState.Gameplay);
+                CalendarManager.Instance.OnCalendarChanged += CheckExamDate;
+                ScheduleManager.Instance.EnableScheduleTracking();
+            }
+        );
     }
 
     private void OnDestroy()
@@ -56,10 +73,10 @@ public class ExamManager : MonoBehaviour
         }
         else
         {
-            DialogUI.Instance.Show(
-                "System",
-                "You failed the exam. Game Over!",
-                () => GameManager.Instance.RestartGame()
+            ConfirmationUI.Instance.Show(
+                "You failed the exam! Restart game?",
+                () => GameManager.Instance.RestartGame(),
+                () => SceneManager.LoadScene(0)
             );
         }
     }

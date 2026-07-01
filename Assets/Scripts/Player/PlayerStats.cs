@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -8,9 +9,12 @@ public class PlayerStats : MonoBehaviour
 
     public event Action OnStatsChanged;
 
+    [SerializeField] private int maxStressLimit = 15;
+
     private Dictionary<StatType, StatData> stats = new();
 
     public IReadOnlyDictionary<StatType, StatData> Stats => stats;
+    public int MaxStressLimit => maxStressLimit;
 
     private void Awake()
     {
@@ -33,12 +37,12 @@ public class PlayerStats : MonoBehaviour
         stats[stat].AddXP(amount);
         OnStatsChanged?.Invoke();
 
-        if (stat == StatType.Stress && stats[stat].XP >= 15)
+        if (stat == StatType.Stress && stats[stat].XP >= maxStressLimit)
         {
-            DialogUI.Instance.Show(
-                "System",
-                "Your stress levels have exceeded the limit! You collapsed. Game Over!",
-                () => GameManager.Instance.RestartGame()
+            ConfirmationUI.Instance.Show(
+                "Your stress levels have exceeded the limit! Restart game?",
+                () => GameManager.Instance.RestartGame(),
+                () => SceneManager.LoadScene(0)
             );
         }
     }

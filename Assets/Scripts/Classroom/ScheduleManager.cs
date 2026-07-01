@@ -3,34 +3,35 @@ using UnityEngine;
 
 public class ScheduleManager : MonoBehaviour
 {
-    [Serializable]
-    public class DailySchedule
+    public static ScheduleManager Instance { get; private set; }
+
+    private void Awake()
     {
-        public DayOfWeek day;
-        public LessonData lesson;
+        Instance = this;
     }
 
-    private void Start()
+    public void EnableScheduleTracking()
     {
         CalendarManager.Instance.OnCalendarChanged += OnTimeChanged;
+        OnTimeChanged(CalendarManager.Instance.CurrentDate, CalendarManager.Instance.CurrentPeriod);
     }
 
     private void OnDestroy()
     {
         if (CalendarManager.Instance != null)
-            CalendarManager.Instance.OnCalendarChanged -= OnTimeChanged; 
+            CalendarManager.Instance.OnCalendarChanged -= OnTimeChanged;
     }
 
     private void OnTimeChanged(DateTime date, CalendarManager.TimePeriod period)
     {
-        if (period == CalendarManager.TimePeriod.Morning) 
+        if (period == CalendarManager.TimePeriod.Morning)
         {
             ClassroomManager.Instance.RequireLecture();
 
             if (ClassroomManager.Instance.LectureRequired)
             {
                 DialogUI.Instance.Show(
-                    "volition",
+                    "System",
                     "A new lecture is available at the classroom today. You must attend it.",
                     () => GameManager.Instance.SetState(GameState.Gameplay)
                 );

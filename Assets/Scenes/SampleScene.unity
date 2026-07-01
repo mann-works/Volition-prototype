@@ -22836,6 +22836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a43da2d736c80ec489e7c1aaf258986e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  maxStressLimit: 10
 --- !u!4 &1997169102
 Transform:
   m_ObjectHideFlags: 0
