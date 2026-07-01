@@ -25,6 +25,8 @@ public class ClassroomUI : MonoBehaviour
 
     public void PlayLecture(LessonData lesson)
     {
+        GameManager.Instance.SetState(GameState.Lecture);
+
         currentLesson = lesson;
         pageIndex = 0;
 
@@ -33,7 +35,6 @@ public class ClassroomUI : MonoBehaviour
 
         panel.SetActive(true);
     }
-
     private void NextPage()
     {
         pageIndex++;
@@ -55,11 +56,7 @@ public class ClassroomUI : MonoBehaviour
             StatType.Knowledge,
             currentLesson.knowledgeReward);
 
-        if (currentLesson.quiz != null)
-        {
-            QuizUI.Instance.ShowQuiz(currentLesson.quiz);
-            return;
-        }
+        GameManager.Instance.SetState(GameState.Gameplay);
 
         CalendarManager.Instance.AdvanceTime();
     }
