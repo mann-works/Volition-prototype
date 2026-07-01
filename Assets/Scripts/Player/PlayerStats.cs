@@ -32,6 +32,15 @@ public class PlayerStats : MonoBehaviour
     {
         stats[stat].AddXP(amount);
         OnStatsChanged?.Invoke();
+
+        if (stat == StatType.Stress && stats[stat].XP >= 15)
+        {
+            DialogUI.Instance.Show(
+                "System",
+                "Your stress levels have exceeded the limit! You collapsed. Game Over!",
+                () => GameManager.Instance.RestartGame()
+            );
+        }
     }
 
     public StatData GetStat(StatType stat)
