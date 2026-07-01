@@ -11,7 +11,8 @@ public class ClassroomUI : MonoBehaviour
     [SerializeField] private TMP_Text teacherText;
     [SerializeField] private TMP_Text lectureText;
     [SerializeField] private Button nextButton;
-    [SerializeField] private GameObject hud;
+    [SerializeField] private GameObject disableHud1;
+    [SerializeField] private GameObject disableHud2;
     private LessonData currentLesson;
     private int pageIndex;
 
@@ -27,7 +28,8 @@ public class ClassroomUI : MonoBehaviour
     public void PlayLecture(LessonData lesson)
     {
         GameManager.Instance.SetState(GameState.Lecture);
-        hud.SetActive(false);
+        disableHud1.SetActive(false);
+        disableHud2.SetActive(false);
         panel.SetActive(true);
         currentLesson = lesson;
         pageIndex = 0;
@@ -37,6 +39,7 @@ public class ClassroomUI : MonoBehaviour
 
         panel.SetActive(true);
     }
+
     private void NextPage()
     {
         pageIndex++;
@@ -53,15 +56,21 @@ public class ClassroomUI : MonoBehaviour
     private void FinishLecture()
     {
         panel.SetActive(false);
-        hud.SetActive(true);
-
+        disableHud1.SetActive(true);
+        disableHud2.SetActive(true);
 
         PlayerStats.Instance.AddXP(
             StatType.Knowledge,
             currentLesson.knowledgeReward);
 
         GameManager.Instance.SetState(GameState.Gameplay);
-
-        CalendarManager.Instance.AdvanceTime();
+        if (currentLesson.quiz != null)
+        {
+            QuizUI.Instance.PlayQuiz(currentLesson.quiz);
+        }
+        else
+        {
+            CalendarManager.Instance.AdvanceTime();
+        }
     }
 }

@@ -38,7 +38,7 @@ public abstract class BaseInteraction : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact()
+    public virtual void Interact()
     {
         if (GameManager.Instance.MustAttendLecture &&
                  this is not StudyInteraction)

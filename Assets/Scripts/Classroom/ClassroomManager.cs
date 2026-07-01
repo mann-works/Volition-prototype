@@ -8,6 +8,8 @@ public class ClassroomManager : MonoBehaviour
 
     public bool LectureRequired { get; private set; }
 
+    private System.DateTime _lastCompletedDate;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -21,17 +23,24 @@ public class ClassroomManager : MonoBehaviour
 
     public void RequireLecture()
     {
-        LessonData lesson = database.GetLesson(CalendarManager.Instance.CurrentDate);
+        System.DateTime currentDate = CalendarManager.Instance.CurrentDate.Date;
 
-        if (lesson == null)
+        if (_lastCompletedDate == currentDate)
         {
-            LectureRequired = false;
-            GameManager.Instance.MustAttendLecture = false;
+            ResetLectureFlags();
             return;
         }
 
-        LectureRequired = true;
-        GameManager.Instance.MustAttendLecture = true;
+        LessonData lesson = database.GetLesson(CalendarManager.Instance.CurrentDate); //[cite: 2]
+
+        if (lesson == null)
+        {
+            ResetLectureFlags();
+            return;
+        }
+
+        LectureRequired = true; //[cite: 2]
+        GameManager.Instance.MustAttendLecture = true; //[cite: 2]
 
         Debug.Log("Lecture is required today.");
     }
@@ -41,23 +50,52 @@ public class ClassroomManager : MonoBehaviour
         if (!LectureRequired)
             return false;
 
-        LessonData lesson =
-            database.GetLesson(CalendarManager.Instance.CurrentDate);
+        LessonData lesson = database.GetLesson(CalendarManager.Instance.CurrentDate); //[cite: 2]
 
         if (lesson == null)
         {
-            Debug.Log("No lesson today.");
-
-            // No lesson today, allow normal study.
-            LectureRequired = false;
+            Debug.Log("No lesson today."); //[cite: 2]
+            ResetLectureFlags();
             return false;
         }
 
-        LectureRequired = false;
+        _lastCompletedDate = CalendarManager.Instance.CurrentDate.Date;
+        ResetLectureFlags();
 
-        Debug.Log("Starting Lecture");
-        ClassroomUI.Instance.PlayLecture(lesson);
+        Debug.Log("Starting Lecture via DialogUI");
+
+        // Pass the data cleanly over to DialogUI instead of ClassroomUI[cite: 3]
+        DialogUI.Instance.ShowPages(
+            lesson.teacherName,
+            lesson.pages,
+            () => HandleLectureFinished(lesson)
+        );
 
         return true;
+    }
+
+    private void HandleLectureFinished(LessonData lesson)
+    {
+        // Awards and cleanup logic transferred seamlessly from ClassroomUI[cite: 3]
+        PlayerStats.Instance.AddXP(StatType.Knowledge, lesson.knowledgeReward); //[cite: 3]
+        GameManager.Instance.SetState(GameState.Gameplay); //[cite: 3]
+
+        if (lesson.quiz != null) //[cite: 3]
+        {
+            QuizUI.Instance.PlayQuiz(lesson.quiz); //[cite: 3]
+        }
+        else
+        {
+            CalendarManager.Instance.AdvanceTime(); //[cite: 3]
+        }
+    }
+
+    private void ResetLectureFlags()
+    {
+        LectureRequired = false;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.MustAttendLecture = false; //[cite: 2]
+        }
     }
 }
