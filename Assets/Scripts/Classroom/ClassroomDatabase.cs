@@ -6,11 +6,9 @@ public class ClassroomDatabase : MonoBehaviour
 
     public LessonData GetLesson(System.DateTime date)
     {
-        Debug.Log("Current Date : " + date);
 
         foreach (var lesson in lessons)
         {
-            Debug.Log("Lesson Date : " + lesson.date);
 
             if (lesson.date.Equals (date))
             {
@@ -19,7 +17,6 @@ public class ClassroomDatabase : MonoBehaviour
             }
         }
 
-        Debug.Log("Lesson NOT Found");
         return null;
     }
 }

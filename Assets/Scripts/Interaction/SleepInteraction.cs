@@ -4,7 +4,7 @@ public class SleepInteraction : BaseInteraction
 {
     protected override void ConfirmInteraction()
     {
-        ApplyStatModifiers();
+        ApplyStatModifiers(); 
         CalendarManager.Instance.AdvanceTime();
     }
 }

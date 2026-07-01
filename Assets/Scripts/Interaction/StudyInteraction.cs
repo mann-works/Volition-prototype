@@ -4,8 +4,10 @@ public class StudyInteraction : BaseInteraction
 {
     protected override void ConfirmInteraction()
     {
-        ApplyStatModifiers();
+        if (ClassroomManager.Instance.TryStartLecture())
+            return;
 
-        StudyManager.Instance.StartStudy();
+        ApplyStatModifiers();
+        CalendarManager.Instance.AdvanceTime();
     }
 }

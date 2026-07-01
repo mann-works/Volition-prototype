@@ -27,7 +27,7 @@ public class ScheduleManager : MonoBehaviour
         switch (period)
         {
             case CalendarManager.TimePeriod.Morning:
-                ClassroomManager.Instance.StartLecture();
+                ClassroomManager.Instance.RequireLecture();
                 break;
         }
 

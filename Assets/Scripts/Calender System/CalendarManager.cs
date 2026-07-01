@@ -37,11 +37,12 @@ public class CalendarManager : MonoBehaviour
         NotifyCalendarChanged();
     }
 
-    public void AdvanceTime()
+    public void AdvanceTimePeriod()
     {
         switch (CurrentPeriod)
         {
             case TimePeriod.Morning:
+
                 CurrentPeriod = TimePeriod.Afternoon;
                 break;
 
@@ -61,7 +62,13 @@ public class CalendarManager : MonoBehaviour
 
         NotifyCalendarChanged();
     }
-
+    public void AdvanceTime()
+    {
+        TransitionManager.Instance.Transition(() =>
+        {
+            AdvanceTimePeriod();
+        });
+    }
     private void NotifyCalendarChanged()
     {
         OnCalendarChanged?.Invoke(CurrentDate, CurrentPeriod);

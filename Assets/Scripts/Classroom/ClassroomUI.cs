@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class ClassroomUI : MonoBehaviour
@@ -10,7 +11,7 @@ public class ClassroomUI : MonoBehaviour
     [SerializeField] private TMP_Text teacherText;
     [SerializeField] private TMP_Text lectureText;
     [SerializeField] private Button nextButton;
-
+    [SerializeField] private GameObject hud;
     private LessonData currentLesson;
     private int pageIndex;
 
@@ -26,7 +27,8 @@ public class ClassroomUI : MonoBehaviour
     public void PlayLecture(LessonData lesson)
     {
         GameManager.Instance.SetState(GameState.Lecture);
-
+        hud.SetActive(false);
+        panel.SetActive(true);
         currentLesson = lesson;
         pageIndex = 0;
 
@@ -51,6 +53,8 @@ public class ClassroomUI : MonoBehaviour
     private void FinishLecture()
     {
         panel.SetActive(false);
+        hud.SetActive(true);
+
 
         PlayerStats.Instance.AddXP(
             StatType.Knowledge,
