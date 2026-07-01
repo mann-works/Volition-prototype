@@ -21,10 +21,20 @@ public class ClassroomManager : MonoBehaviour
 
     public void RequireLecture()
     {
+        LessonData lesson = database.GetLesson(CalendarManager.Instance.CurrentDate);
+
+        if (lesson == null)
+        {
+            LectureRequired = false;
+            GameManager.Instance.MustAttendLecture = false;
+            return;
+        }
+
         LectureRequired = true;
+        GameManager.Instance.MustAttendLecture = true;
+
         Debug.Log("Lecture is required today.");
     }
-
 
     public bool TryStartLecture()
     {

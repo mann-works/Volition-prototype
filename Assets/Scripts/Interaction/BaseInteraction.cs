@@ -40,6 +40,13 @@ public abstract class BaseInteraction : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        if (GameManager.Instance.MustAttendLecture &&
+                 this is not StudyInteraction)
+        {
+            Debug.Log("You must attend today's lecture first.");
+            return;
+        }
+
         ConfirmationUI.Instance.Show(
             confirmationMessage,
             ConfirmInteraction,
@@ -58,4 +65,5 @@ public abstract class BaseInteraction : MonoBehaviour, IInteractable
             PlayerStats.Instance.AddXP(modifier.statType, modifier.amount);
         }
     }
+
 }

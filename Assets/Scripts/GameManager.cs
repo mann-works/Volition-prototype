@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 
     public event Action<GameState> OnGameStateChanged;
 
+    public bool MustAttendLecture { get; set; }
+
     private void Awake()
     {
         if (Instance == null)
@@ -20,6 +22,7 @@ public class GameManager : MonoBehaviour
         }
 
         CurrentState = GameState.Gameplay;
+        MustAttendLecture = false;
     }
 
     public void SetState(GameState newState)

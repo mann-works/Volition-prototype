@@ -21,15 +21,12 @@ public class ScheduleManager : MonoBehaviour
         if (CalendarManager.Instance != null)
             CalendarManager.Instance.OnCalendarChanged -= OnTimeChanged;
     }
-
     private void OnTimeChanged(DateTime date, CalendarManager.TimePeriod period)
     {
-        switch (period)
+        if (period == CalendarManager.TimePeriod.Morning)
         {
-            case CalendarManager.TimePeriod.Morning:
-                ClassroomManager.Instance.RequireLecture();
-                break;
+            ClassroomManager.Instance.RequireLecture();
         }
-
     }
+
 }
