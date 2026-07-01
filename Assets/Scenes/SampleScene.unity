@@ -2519,8 +2519,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClassroomDatabase
   lessons:
-  - {fileID: 11400000, guid: 85b8bada560a59742a76059ae0adb519, type: 2}
-  - {fileID: 11400000, guid: ad54f07ada829f54898a672c258e4a10, type: 2}
+  - {fileID: 11400000, guid: fe6f3b4f46e9a564cb6e493ba158ce63, type: 2}
+  - {fileID: 11400000, guid: 3bec7e829aab73146a57c0a310a49a08, type: 2}
+  - {fileID: 11400000, guid: 3a7d757a9a1e4f045b2d013eef51648e, type: 2}
+  - {fileID: 11400000, guid: 124d2c40eb0115b4aa420b1659f3cd17, type: 2}
+  - {fileID: 11400000, guid: ccb25e9e41ae730428a852162a366f75, type: 2}
+  - {fileID: 11400000, guid: d8f5399fb843e4e46860b9c58e939ee2, type: 2}
+  - {fileID: 11400000, guid: fb086bead1a59984da85423a7dedb8f6, type: 2}
 --- !u!114 &358066979
 MonoBehaviour:
   m_ObjectHideFlags: 0
