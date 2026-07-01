@@ -26,34 +26,42 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (!GameManager.Instance.CanPlayerMove)
+            return;
+
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+
+        if (ConfirmationUI.Instance != null && ConfirmationUI.Instance.IsOpen)
+            return;
+
+        Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+        mouseWorldPos.z = 0f;
+
+        RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
+
+        if (hit.collider == null)
         {
-            Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
-
-            RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
-            if (ConfirmationUI.Instance != null &&
-            ConfirmationUI.Instance.IsOpen)
-            {
-                return;
-            }
-            if (hit.collider != null)
-            {
-                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-
-                if (interactable != null)
-                {
-                    _targetPosition = interactable.InteractionPoint.position;
-                    _currentInteractable = interactable;
-                    _waitingForInteraction = true;
-                    return;
-                }
-            }
-
             _targetPosition = mouseWorldPos;
             _waitingForInteraction = false;
+            return;
         }
+
+        IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+
+        if (interactable == null)
+        {
+            _targetPosition = mouseWorldPos;
+            _waitingForInteraction = false;
+            return;
+        }
+
+        _targetPosition = interactable.InteractionPoint.position;
+        _currentInteractable = interactable;
+        _waitingForInteraction = true;
     }
+
      private void FixedUpdate()
     {
         Vector2 currentPosition = _rigidbody.position;
@@ -70,6 +78,7 @@ public class Player : MonoBehaviour
 
         bool isWalking = Vector2.Distance(currentPosition, _targetPosition) > 0.01f;
         _animator.SetBool("isWalking", isWalking);
+
 
         if (isWalking)
         {
